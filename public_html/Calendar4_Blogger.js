@@ -52,7 +52,7 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
         elem: null,  // 置換するdiv要素。
         dataPostsID: "datePosts",  // 日の投稿の一覧を表示するdivのID
         days: [],  // 曜日の配列。
-        init: function (dt) {  // 日付オブジェクトからカレンダーのデータを作成。
+        init: function (dt) {  // 日付オブジェクトからカレンダーのデータを作成.
             vars.y = dt.getFullYear();  // 表示カレンダーの年を取得。
             vars.m = dt.getMonth() + 1;  // 表示カレンダーの月を取得。
             vars.em = new Date(vars.y, vars.m, 0).getDate();  // 表示カレンダーの末日を取得。
@@ -73,11 +73,11 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
         },
         createCalendar:  function() {  // カレンダーのHTML要素を作成。 
             var calflxC = nd.calflxC();  // カレンダーのflexコンテナを得る。
-            calflxC.appendChild(nd.arrowflxI('\u00ab',"left_calendar"));  // 左向き矢印のflexアイテム。flexBasis14%。
+            calflxC.appendChild(nd.leftarrowflxI());  // 左向き矢印のflexアイテム。flexBasis14%。
             var title =  (vars.L10N)?((vars.order=="published")?"":"updated"):((vars.order=="published")?"":"更新");
             title = (vars.L10N)?vars.enM[vars.m-1] + " " + vars.y + " " + title:vars.y + "年" + vars.m + "月" + title;
             calflxC.appendChild(nd.titleflxI(title));  // カレンダータイトルのflexアイテム。flexBasis 72%。
-            calflxC.appendChild(nd.arrowflxI('\u00bb',"right_calendar"));  // 右向き矢印のflexアイテム。flexBasis14%。
+            calflxC.appendChild(nd.rightarrowflxI());  // 右向き矢印のflexアイテム。flexBasis14%。
             vars.days.forEach(function(e,i){  // 1行目に曜日を表示させる。2番目の引数は配列のインデックス。
                 var node = nd.calflxI(e);  // 曜日のflexアイテムを取得。
                 node.s = i;  // 曜日番号を取得。
@@ -220,16 +220,40 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
             node.appendChild(titleflxI);
             return node;
         },
-        arrowflxI: function(text,id) {  // 月を移動するボタンを返す。
+        _arrowflxI: function(text,id) {  // 月を移動するボタンを返す。
             var node = eh.createElem("div");  // flexアイテムになるdiv要素を生成。
             node.textContent = text;
             node.id = id;
             node.style.flex = "0 0 14%";  // 1/7幅で伸縮しない。
             node.style.textAlign = "center";
-            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
+//            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
             node.title = (vars.L10N)?((id=="left_calendar")?"Newer":"Older"):((id=="left_calendar")?"翌月へ":"前月へ");
             return node;
         },
+        leftarrowflxI: function() {  // 左向き矢印のflexアイテム。flexBasis14%。
+            var dt = new Date();  // 今日の日付オブジェクトを取得。
+            var now = new Date(dt.getFullYear(), dt.getMonth(),1);  // 今月の1日のミリ秒を取得。
+            var caldate = new Date(vars.y, vars.m-1,1);  // カレンダーの1日のミリ秒を取得。
+            if (now > caldate) {  // 表示カレンダーの月が現在より過去のときのみ左矢印を表示させる。
+                var node = nd._arrowflxI('\u00ab',"left_calendar");
+                node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
+                return node;
+            } else {
+                return nd._arrowflxI(null,null);
+            }
+        },
+        rightarrowflxI: function() {  // 右向き矢印のflexアイテム。flexBasis14%。
+            var dt = new Date(2013,3,1);  // 最初の投稿月の日付オブジェクトを取得。
+            var firstpost = new Date(dt.getFullYear(), dt.getMonth(),1);  // 今月の1日のミリ秒を取得。
+            var caldate = new Date(vars.y, vars.m-1,1);  // カレンダーの1日のミリ秒を取得。
+            if (firstpost > caldate) {  // 表示カレンダーの月が初投稿より未来のときのみ右矢印を表示させる。
+                return nd._arrowflxI(null,null);
+            } else {
+                var node = nd._arrowflxI('\u00bb',"right_calendar");
+                node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
+                return node;
+            }
+        },        
         titleflxI: function(title) {
             var node = eh.createElem("div");  // flexアイテムになるdiv要素を生成。
             node.textContent = title;
@@ -281,16 +305,11 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
                         case "title_calendar":  // 公開日と更新日を切り替える。
                             vars.order = (vars.order=="published")?"updated":"published";
                             var dt = new Date(vars.y, vars.m-1, 1);
-                            cal.getFeed(dt);
-                            break;
                         case "left_calendar":
-                            var dt = new Date(vars.y,vars.m,1);  // 日付オブジェジェクト。例の日付データ:2013年9月1日。
-                            cal.getFeed(dt);
-                            break;
+                            var dt = new Date(vars.y,vars.m,1);  // 翌月の日付オブジェクト。
                         case "right_calendar":  
-                            var dt = new Date(vars.y,vars.m-2,1);  // 日付オブジェジェクト。例の日付データ:2013年9月1日。
-                            cal.getFeed(dt);
-                            break;
+                            var dt = new Date(vars.y,vars.m-2,1);  // 前月の日付オブジェクト。
+                        cal.getFeed(dt);
                     }
             }
         },
