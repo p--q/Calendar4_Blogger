@@ -1,0 +1,1 @@
+java -jar ~/closure-compiler/compiler.jar --js Calendar4_Blogger.js  --js_output_file Calendar4_Blogger.min.js
