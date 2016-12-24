@@ -226,7 +226,6 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
             node.id = id;
             node.style.flex = "0 0 14%";  // 1/7幅で伸縮しない。
             node.style.textAlign = "center";
-//            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
             node.title = (vars.L10N)?((id=="left_calendar")?"Newer":"Older"):((id=="left_calendar")?"翌月へ":"前月へ");
             return node;
         },
@@ -306,14 +305,16 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
                         case "title_calendar":  // 公開日と更新日を切り替える。
                             vars.order = (vars.order=="published")?"updated":"published";
                             dt = new Date(vars.y, vars.m-1, 1);
+                            cal.getFeed(dt);
                             break;
                         case "left_calendar":
                             dt = new Date(vars.y,vars.m,1);  // 翌月の日付オブジェクト。
+                            cal.getFeed(dt);
                             break;
                         case "right_calendar":  
                             dt = new Date(vars.y,vars.m-2,1);  // 前月の日付オブジェクト。
+                            cal.getFeed(dt);
                             break;
-                    cal.getFeed(dt);
                     }
             }
         },
