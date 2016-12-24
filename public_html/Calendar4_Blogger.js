@@ -301,18 +301,19 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
                     }
                     break;
                 default:
+                    var dt;
                     switch (target.id) {
                         case "title_calendar":  // 公開日と更新日を切り替える。
                             vars.order = (vars.order=="published")?"updated":"published";
-                            var dt = new Date(vars.y, vars.m-1, 1);
+                            dt = new Date(vars.y, vars.m-1, 1);
                             break;
                         case "left_calendar":
-                            var dt = new Date(vars.y,vars.m,1);  // 翌月の日付オブジェクト。
+                            dt = new Date(vars.y,vars.m,1);  // 翌月の日付オブジェクト。
                             break;
                         case "right_calendar":  
-                            var dt = new Date(vars.y,vars.m-2,1);  // 前月の日付オブジェクト。
+                            dt = new Date(vars.y,vars.m-2,1);  // 前月の日付オブジェクト。
                             break;
-                        cal.getFeed(dt);
+                    cal.getFeed(dt);
                     }
             }
         },
