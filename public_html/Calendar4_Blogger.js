@@ -226,7 +226,6 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
             node.id = id;
             node.style.flex = "0 0 14%";  // 1/7幅で伸縮しない。
             node.style.textAlign = "center";
-            node.title = (vars.L10N)?((id=="left_calendar")?"Newer":"Older"):((id=="left_calendar")?"翌月へ":"前月へ");
             return node;
         },
         leftarrowflxI: function() {  // 左向き矢印のflexアイテム。flexBasis14%。
@@ -236,6 +235,7 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
             if (now > caldate) {  // 表示カレンダーの月が現在より過去のときのみ左矢印を表示させる。
                 var node = nd._arrowflxI('\u00ab',"left_calendar");
                 node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
+                node.title = (vars.L10N)?"Newer":"翌月へ";
                 return node;
             } else {
                 return nd._arrowflxI(null,null);
@@ -250,6 +250,7 @@ var Calendar4_Blogger = Calendar4_Blogger || function() {
             } else {
                 var node = nd._arrowflxI('\u00bb',"right_calendar");
                 node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
+                node.title = (vars.L10N)?"Older":"前月へ";
                 return node;
             }
         },        
